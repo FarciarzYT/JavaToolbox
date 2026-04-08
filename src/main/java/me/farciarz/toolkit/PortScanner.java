@@ -31,7 +31,7 @@ public class PortScanner {
 
                         String service = ServiceResolver.getName(p);
                         openCount.incrementAndGet();
-                        System.out.printf("  [OPEN] %-6d | %s%n", p, service);
+                        System.out.printf("[OPEN] %-6d | %s%n", p, service);
                         logger.log(p, service);
 
                     } catch (IOException ignored) {
@@ -46,7 +46,4 @@ public class PortScanner {
             pool.awaitTermination(5, TimeUnit.MINUTES);
         }
     }
-
-    public int getScanned()   { return scanned.get(); }
-    public int getOpenCount() { return openCount.get(); }
 }

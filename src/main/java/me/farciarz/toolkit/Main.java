@@ -1,8 +1,12 @@
 package me.farciarz.toolkit;
+import org.w3c.dom.ls.LSOutput;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 import static me.farciarz.toolkit.CliHelper.*;
+import static me.farciarz.toolkit.XORCipher.*;
 
 public class Main {
 
@@ -34,7 +38,9 @@ public class Main {
     private static void startPortScanner() throws Exception {
         System.out.print("[?] input target (127.0.0.1): ");
         String target = input.nextLine();
-
+        if (target.isEmpty()){
+            target = "127.0.0.1";
+        };
         System.out.println("[*] Target: " + target);
         System.out.println("[*] Validating Host...");
 
@@ -52,7 +58,9 @@ public class Main {
     private static void startSubnetScan() throws Exception {
         System.out.print("[?] input in CIDR format (192.168.1.0/24): ");
         String subnet = input.nextLine();
-
+        if (subnet.isEmpty()){
+            subnet = "192.168.1.0/24";
+        };
         System.out.println("[*] Starting to scan subnet: " + subnet);
 
         long startTime = System.currentTimeMillis();
@@ -70,6 +78,80 @@ public class Main {
     }
 
     private static void startFileEncryption() {
-        System.out.println("start encryption");
+        showCipherMenu();
+        int choice = input.nextInt();
+        switch (choice) {
+            case 1 -> startXOREncryption();
+            case 2 -> startXOREncryption();
+            case 5 -> {
+                System.out.println("Closing...");
+            }
+        }
+    }
+
+    private static void startXOREncryption(){
+        showXOROptionsMenu();
+        int choice = input.nextInt();
+        switch (choice) {
+            case 1 -> {
+                showCipherOptionsMenu();
+                choice = input.nextInt();
+                input.nextLine();
+                switch (choice){
+                    case 1 -> {
+                        System.out.println("========================");
+                        System.out.println("[!] Starting Encryption");
+                        System.out.println("========================");
+                        System.out.println();
+                        System.out.println("[?] Insert Text You Want to be encrypted");
+                        String text = input.nextLine();
+                        System.out.println("[?] Insert Key For your Encryption");
+                        String key = input.nextLine();
+                        System.out.println("[*] Encrypted Hex:");
+                        byte[] encrypted = encrypt(text, key).getBytes(StandardCharsets.UTF_8);
+                        showInHex(encrypted);
+                        System.out.println();
+                    }
+                    case 2 ->{
+                        System.out.println("File support incoming");
+                    }
+                    case 5 ->{
+                        System.out.println("[!] exiting");
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + choice);
+                }
+            }
+            case 2 ->{
+                showCipherOptionsMenu();
+                choice = input.nextInt();
+                input.nextLine();
+                switch (choice){
+                    case 1 -> {
+                        System.out.println("========================");
+                        System.out.println("[!] Starting Decryption");
+                        System.out.println("========================");
+                        System.out.println();
+                        System.out.println("[?] Insert Hex You Want to decrypt");
+                        String hex = input.nextLine();
+                        System.out.println("[?] Insert Key For your Encryption");
+                        String key = input.nextLine();
+                        byte[] bytes = hexToBytes(hex);
+                        System.out.println("[*] Decrypted Hex");
+                        System.out.println(decrypt(bytes ,key));
+                    }
+                    case 2 ->{
+                        System.out.println("File support incoming");
+                    }
+                    case 5 ->{
+                        System.out.println("[!] exiting");
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + choice);
+                }
+
+            }
+            case 5 -> {
+                System.out.println("cd ..");
+            }
+        }
     }
 }

@@ -34,9 +34,9 @@ public class CidrUtils {
     private static int ipToInt(String ipAddress) throws UnknownHostException {
         byte[] bytes = InetAddress.getByName(ipAddress).getAddress();
         int val = 0;
-        for (int i = 0; i < bytes.length; i++) {
+        for (byte aByte : bytes) {
             val <<= 8;
-            val |= bytes[i] & 0xff;
+            val |= aByte & 0xff;
         }
         return val;
     }
